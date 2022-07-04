@@ -1,12 +1,9 @@
 <script context="module">
   export async function load({ fetch }) {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
     const url =
       'https://www.callboxinc.com/wp-json/cch/v1/case-studies?per_page=10&page=1';
 
-    const res = await fetch(url, { signal });
+    const res = await fetch(url);
     const data = await res.json();
 
     if (res.ok) {
