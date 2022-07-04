@@ -11,7 +11,7 @@
     </div>
 
     <div class="card">
-      <a href="/">Blog</a>
+      <a href="/">Coming soon...</a>
     </div>
   </nav>
 </div>

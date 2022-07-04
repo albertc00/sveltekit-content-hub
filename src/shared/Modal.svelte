@@ -67,12 +67,12 @@
   .modal {
     align-self: flex-start;
     background-color: #fff;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
     /* box-shadow: 0 1px 24px 0 rgb(0 0 0 / 8%); */
     box-shadow: 0 50px 100px -20px rgb(50 50 93 / 25%),
       0 30px 60px -30px rgb(0 0 0 / 30%), 0 -18px 60px -10px rgb(0 0 0 / 3%);
     min-width: 400px;
-    max-width: 90%;
+    max-width: calc(1280px / 12 * 10);
     min-height: 200px;
   }
 

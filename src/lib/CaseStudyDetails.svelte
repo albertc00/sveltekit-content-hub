@@ -11,7 +11,9 @@
       <tr>
         <th scope="row" class="label">Title</th>
         <td>
-          <div class="p"><a href={data.unlocked}>{data.title}</a></div>
+          <div class="p">
+            <a href={data.unlocked} target="_blank">{data.title}</a>
+          </div>
         </td>
       </tr>
       <tr>
@@ -239,8 +241,7 @@
     }
   }
 
-  ul,
-  ol {
+  ul {
     @include text;
     padding-left: 1.25rem;
   }

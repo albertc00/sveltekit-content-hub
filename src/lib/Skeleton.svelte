@@ -15,7 +15,7 @@
     height: calc(
       1rem + (0.375rem * 2) + 2px
     ); /* font-size _ padding top and bottom */
-    max-width: 217px;
+    max-width: 335px;
     font-size: 0.75rem; /* 12px */
     line-height: 1rem; /* 16px */
     background: #eee;

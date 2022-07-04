@@ -6,9 +6,9 @@
   import Pagination from '$shared/Pagination.svelte';
   import { category, caseStudyCols as columns } from '$stores/store';
   import httpBuildQuery from '$functions/httpBuildQuery';
+  import Search from '$lib/SearchForm.svelte';
 
   import useModal from '$functions/useModal';
-  import SearchForm from './SearchForm.svelte';
   import ShowHideCols from '$shared/ShowHideCols.svelte';
   import Filter from '$lib/Filter.svelte';
   import DropdownActions from './DropdownActions.svelte';
@@ -23,9 +23,21 @@
 
   $: caseStudies = data.data;
   $: totalRecords = data.foundPosts;
+  $: s = data.s ?? '';
   $: currentPage = data.page;
   $: perPage = data.perPage;
   $: filters = data.filters ?? [];
+
+  function handleSearch({ detail }) {
+    console.log(detail);
+    const route = buildRoute({
+      page: currentPage,
+      perPage,
+      s: detail,
+      filters,
+    });
+    goto(route);
+  }
 
   const baseUrl = '/case-studies/page/';
   const ddaText = 'Table actions';
@@ -41,7 +53,7 @@
   ];
 
   function handlePerPage({ detail: perPage }) {
-    const route = buildRoute({ page: currentPage, perPage, filters });
+    const route = buildRoute({ page: currentPage, perPage, s, filters });
     goto(route);
   }
 
@@ -58,7 +70,7 @@
 
   function handleFilterApply(filters) {
     hidefilters();
-    const route = buildRoute({ page: currentPage, perPage, filters });
+    const route = buildRoute({ page: currentPage, perPage, s, filters });
     goto(route);
   }
 
@@ -102,15 +114,21 @@
     }
   }
 
-  function buildRoute({ page = 1, perPage = 10, filters = [] }) {
+  function buildRoute({ page = 1, perPage = 10, s = '', filters = [] }) {
     const baseUrl = '/case-studies/page/';
+
+    let route = `${baseUrl}${page}?per_page=${perPage}`;
+
+    if (s !== '') {
+      route += `&s=${encodeURIComponent(s)}`;
+    }
 
     if (filters.length) {
       const filterQuery = httpBuildQuery({ filters });
-      return `${baseUrl}${page}?per_page=${perPage}&${filterQuery}`;
+      route += `&${filterQuery}`;
     }
 
-    return `${baseUrl}${page}?per_page=${perPage}`;
+    return route;
   }
 
   let wrapperRef;
@@ -133,7 +151,11 @@
   <div class="actionContainer">
     <div class="search">
       <div class="search-wrapper">
-        <SearchForm />
+        <Search
+          searchQuery={s}
+          placeholder="Type keywords to find case studies"
+          on:search={handleSearch}
+        />
       </div>
 
       <button class="filter" on:click={() => showfilters()}>
@@ -203,21 +225,21 @@
       class="nav"
       sveltekit:prefetch
       slot="left"
-      href={buildRoute({ page, perPage, filters })}
+      href={buildRoute({ page, perPage, s, filters })}
       ><span class="material-symbols-outlined"> &#xe408 </span></a
     >
     <a
       class="nav"
       sveltekit:prefetch
       slot="right"
-      href={buildRoute({ page, perPage, filters })}
+      href={buildRoute({ page, perPage, s, filters })}
       ><span class="material-symbols-outlined"> &#xe409 </span></a
     >
     <a
       sveltekit:prefetch
       class:selected={page === currentPage}
       slot="page"
-      href={buildRoute({ page, perPage, filters })}>{page}</a
+      href={buildRoute({ page, perPage, s, filters })}>{page}</a
     >
   </Pagination>
 </div>

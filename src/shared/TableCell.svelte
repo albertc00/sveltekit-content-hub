@@ -42,7 +42,6 @@
     @include app.text('sm');
     font-family: 'Lato', sans-serif;
     color: app.colors('grey-900');
-    padding: 0.25rem 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

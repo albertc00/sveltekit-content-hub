@@ -1,7 +1,5 @@
 <script>
-    export let text;
-  </script>
-  
-  <span class="header">
-    {text}
-  </span>
+  export let text;
+</script>
+
+{text}
