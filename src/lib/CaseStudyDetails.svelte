@@ -216,6 +216,13 @@
       & > td {
         padding: $padding-y 0;
       }
+
+      &.the-content {
+        th,
+        td {
+          border-bottom: 0 none;
+        }
+      }
     }
   }
 
@@ -303,13 +310,6 @@
     background-color: app.colors('grey-400', 0.1);
     border: 1px solid app.colors('grey-400', 0.3);
     border-radius: 0.375rem;
-  }
-
-  .the-content {
-    th,
-    td {
-      border-bottom: 0 none;
-    }
   }
 
   .content-wrapper {
