@@ -130,7 +130,7 @@
           <Value value={data.results}>
             <table class="results">
               {#each data.results as result (result)}
-                <tr>
+                <tr class="result">
                   <th scope="row">{result.label}</th>
                   <td>{result.value}</td>
                 </tr>
@@ -236,7 +236,7 @@
       font-weight: 500;
     }
 
-    tr {
+    tr.result {
       &:not(:last-child) {
         th,
         td {
