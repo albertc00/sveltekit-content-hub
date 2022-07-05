@@ -105,7 +105,12 @@
     border-radius: 9999px;
     cursor: pointer;
     margin: 0;
-    height: calc(24px + 1rem);
+    height: calc(24px + 0.75rem);
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: rgba(#fff, 0.1);
+    }
   }
 
   .content {

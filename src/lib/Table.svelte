@@ -27,7 +27,6 @@
   $: rowHeight = rowRef[0]?.offsetHeight;
   $: scrollXHeight = wrapperRef?.offsetHeight - wrapperRef?.clientHeight;
   $: maxHeight = headerHeight + rowHeight * maxRows + scrollXHeight;
-  $: console.log(maxHeight);
 
   $: dummyRows = range(1, initialRowCount);
 </script>

@@ -6,7 +6,7 @@
 </script>
 
 <div class="wrapper">
-  <table>
+  <table class="details">
     <tbody>
       <tr>
         <th scope="row" class="label">Title</th>
@@ -191,47 +191,57 @@
     padding: 1.5rem;
   }
 
-  table {
+  table.details {
     border-spacing: 0;
 
-    th,
-    td {
-      border-bottom: 1px solid app.colors('grey-400', 0.2);
-    }
-
-    $padding-y: 1rem;
-
-    th {
-      text-align: left;
-      vertical-align: top;
-      padding: $padding-y 3rem $padding-y 0;
-
-      &.section {
-        padding-top: 2.5rem;
-        border-bottom: 0 none;
+    & > tbody > tr {
+      & > th,
+      & > td {
+        border-bottom: 1px solid app.colors('grey-400', 0.2);
       }
-    }
 
-    td {
-      padding: $padding-y 0;
+      $padding-y: 1rem;
+
+      & > th {
+        text-align: left;
+        vertical-align: top;
+        padding: $padding-y 3rem $padding-y 0;
+
+        &.section {
+          padding-top: 2.5rem;
+          border-bottom: 0 none;
+        }
+      }
+
+      & > td {
+        padding: $padding-y 0;
+      }
     }
   }
 
   table.results {
+    border-spacing: 0;
     border: 1px solid app.colors('grey-400', 0.3);
     border-radius: 0.25rem;
 
-    tr {
-      th,
-      td {
-        @include text;
-        border-bottom: 1px solid app.colors('grey-400', 0.3);
-        padding: 0.5rem;
-      }
+    th,
+    td {
+      text-align: left;
+      @include text;
+      padding: 0.5rem;
+    }
 
-      th {
-        font-family: 'Work Sans', sans-serif;
-        font-weight: 500;
+    th {
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 500;
+    }
+
+    tr {
+      &:not(:last-child) {
+        th,
+        td {
+          border-bottom: 1px solid app.colors('grey-400', 0.3);
+        }
       }
 
       &:last-child {
