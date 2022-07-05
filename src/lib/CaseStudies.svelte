@@ -31,7 +31,7 @@
   function handleSearch({ detail }) {
     console.log(detail);
     const route = buildRoute({
-      page: currentPage,
+      page: 1,
       perPage,
       s: detail,
       filters,
@@ -53,7 +53,7 @@
   ];
 
   function handlePerPage({ detail: perPage }) {
-    const route = buildRoute({ page: currentPage, perPage, s, filters });
+    const route = buildRoute({ page: 1, perPage, s, filters });
     goto(route);
   }
 
@@ -70,7 +70,7 @@
 
   function handleFilterApply(filters) {
     hidefilters();
-    const route = buildRoute({ page: currentPage, perPage, s, filters });
+    const route = buildRoute({ page: 1, perPage, s, filters });
     goto(route);
   }
 
@@ -80,7 +80,8 @@
 
   function handleClearAll() {
     filters = [];
-    goto(`${baseUrl}${currentPage}?per_page=${perPage}`);
+    const route = buildRoute({ page: 1, perPage, s, filters });
+    goto(route);
   }
 
   //EDIT COLUMNS👽👽👽
@@ -116,19 +117,18 @@
 
   function buildRoute({ page = 1, perPage = 10, s = '', filters = [] }) {
     const baseUrl = '/case-studies/page/';
-
-    let route = `${baseUrl}${page}?per_page=${perPage}`;
+    let route = `${baseUrl}${page}`;
+    let queryParams = { per_page: perPage };
 
     if (s !== '') {
-      route += `&s=${encodeURIComponent(s)}`;
+      queryParams.s = s;
     }
 
     if (filters.length) {
-      const filterQuery = httpBuildQuery({ filters });
-      route += `&${filterQuery}`;
+      queryParams.filters = filters;
     }
 
-    return route;
+    return `${route}?${httpBuildQuery(queryParams)}`;
   }
 
   let wrapperRef;
@@ -186,13 +186,14 @@
         {:else if col === 'targetLocation'}
           <TableCell text={row.targetLocation} {wrapperRef} />
         {:else if col === 'pdf'}
-          <PDF pdf={row.pdf} />
+          <Hyperlink text="View PDF" link={row.pdf} copyButton {wrapperRef} />
         {:else if col === 'webpage'}
           <Webpage gated={row.link} unlocked={row.unlocked} />
         {:else if col === 'client'}
           <Hyperlink
             text={row.clientName}
             link={row.clientWebsite}
+            favicon
             {wrapperRef}
           />
         {:else if col === 'target_dm'}

@@ -1,57 +1,71 @@
 <script>
-  import Button from '$shared/Button.svelte';
+  export let link;
 
-  export let pdf;
-  export let center = false;
   let copied = false;
 
-  const copy = async () => {
-    await navigator.clipboard.writeText(pdf);
-    copied = true;
+  function handleCopy() {
+    navigator.clipboard.writeText(link).then(() => {
+      copied = true;
 
-    setTimeout(() => {
-      copied = !copied;
-    }, 2000);
-  };
+      setTimeout(() => {
+        copied = false;
+      }, 500);
+    });
+  }
 </script>
 
-<div class="wrapper" class:center>
-  <Button size="xs" preventDefault filled={false} weight={500} href={pdf}
-    >View PDF</Button
-  >
-
-  <button class="copy" on:click={copy}>
-    <span class="material-symbols-outlined" class:copied>&#xe14d;</span>
-  </button>
+<div class="pdf">
+  <a class="link" href={link} target="_blank">
+    <slot />
+  </a>
+  {#if copied}
+    <span class="abs copied material-symbols-outlined">&#xe86c;</span>
+  {:else}
+    <button
+      type="button"
+      class="abs copy material-symbols-outlined"
+      on:click={handleCopy}>&#xe14d;</button
+    >
+  {/if}
 </div>
 
 <style lang="scss">
   @use '../styles/app';
 
-  @include app.root {
-    .wrapper {
-      display: grid;
-      grid-template-columns: max-content max-content;
-      gap: 1rem;
-      align-items: center;
+  .pdf {
+    position: relative;
+    display: inline-block;
+    @include app.text('sm');
+  }
 
-      &.center {
-        justify-content: center;
-      }
+  .link {
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    color: app.colors('blue-350');
+  }
 
-      .copy {
-        all: unset;
-      }
+  .copy {
+    padding: 0;
+    border: 0 none;
+    background: transparent;
+    color: app.colors('grey-400', 0.7);
+    cursor: pointer;
 
-      .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
-        color: app.colors('blue-400');
-        cursor: pointer;
-      }
-
-      .copied {
-        font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 20;
-      }
+    &:hover {
+      color: app.colors('grey-400');
     }
+  }
+
+  .copied {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    color: app.colors('blue-350', 0.8);
+  }
+
+  .abs {
+    position: absolute;
+    top: 50%;
+    right: calc((0.75rem + 24px) * -1);
+    transform: translateY(-50%);
   }
 </style>

@@ -1,5 +1,4 @@
 <script>
-  import Skeleton from '$lib/Skeleton.svelte';
   import { onMount } from 'svelte';
   import range from '$functions/range';
 
@@ -11,21 +10,24 @@
   $: _columns = columns.filter(({ show }) => show);
 
   let mql;
-
   onMount(() => {
     mql = window.matchMedia('(min-width: 1281px)');
   });
 
   $: maxCols = mql?.matches ? 6 : 5;
-  $: visible = columns.filter(({ show }) => show);
-  $: colCount = visible.length;
+  $: colWidth = wrapperRef?.clientWidth / maxCols;
+  $: colCount = _columns.length;
   $: excessCols = Math.max(colCount - maxCols, 0);
+  $: excessWidth = colWidth * excessCols;
 
+  const maxRows = 10;
   let headerRef;
-  let rowRef;
+  let rowRef = [];
   $: headerHeight = headerRef?.offsetHeight;
-  $: rowHeight = rowRef?.offsetHeight;
-  $: wrapperScrollXHeight = wrapperRef?.offsetHeight - wrapperRef?.clientHeight;
+  $: rowHeight = rowRef[0]?.offsetHeight;
+  $: scrollXHeight = wrapperRef?.offsetHeight - wrapperRef?.clientHeight;
+  $: maxHeight = headerHeight + rowHeight * maxRows + scrollXHeight;
+  $: console.log(maxHeight);
 
   $: dummyRows = range(1, initialRowCount);
 </script>
@@ -33,9 +35,9 @@
 <div
   class="table-wrapper"
   bind:this={wrapperRef}
-  style:max-height={`calc(${headerHeight}px + (${rowHeight}px * 10) + ${wrapperScrollXHeight}px)`}
+  style:max-height={`${maxHeight}px`}
 >
-  <table cellspacing="0" style:width={`calc(100% + (250px * ${excessCols}))`}>
+  <table cellspacing="0" style:width={`calc(100% + ${excessWidth}px)`}>
     <thead>
       <tr bind:this={headerRef}>
         {#each _columns as { id, title, headerComponent } (id)}
@@ -51,8 +53,8 @@
     </thead>
     <tbody>
       {#if data}
-        {#each data as row (row.id)}
-          <tr bind:this={rowRef}>
+        {#each data as row, i (row.id)}
+          <tr bind:this={rowRef[i]}>
             {#each _columns as { id, as } (id)}
               {#if as === 'th'}
                 <th>
@@ -67,14 +69,12 @@
           </tr>
         {/each}
       {:else}
-        {#each dummyRows as dummyRow (dummyRow)}
-          <tr bind:this={rowRef}>
+        {#each dummyRows as dummyRow, i (dummyRow)}
+          <tr bind:this={rowRef[i]}>
             {#each _columns as { id, show } (id)}
-              {#if show}
-                <td>
-                  <Skeleton />
-                </td>
-              {/if}
+              <td>
+                <div class="skeleton" />
+              </td>
             {/each}
           </tr>
         {/each}
@@ -86,12 +86,13 @@
 <style lang="scss">
   @use '../styles/app';
 
+  $border-color: app.colors('grey-400', 0.275);
+
   .table-wrapper {
     width: 100%;
     overflow-y: scroll;
     overflow-x: scroll;
-    border-top: 1px solid app.colors('grey-200');
-    border-left: 1px solid app.colors('grey-200');
+    border: 1px solid $border-color;
   }
 
   table {
@@ -104,9 +105,10 @@
     top: 0;
     z-index: 99;
     border-top: 0 none;
+    background-color: #fff;
 
     tr {
-      background-color: app.colors('grey-150');
+      background-color: app.colors('grey-400', 0.15);
     }
 
     th {
@@ -118,7 +120,7 @@
       text-align: left;
       text-transform: uppercase;
       color: app.colors('grey-900');
-      border: 1px solid app.colors('grey-200');
+      border: 1px solid $border-color;
 
       border-top-width: 0;
       border-right-width: 0;
@@ -137,7 +139,7 @@
   tbody {
     tr {
       &:hover {
-        background-color: app.colors('grey-100');
+        background-color: app.colors('grey-400', 0.07);
       }
     }
 
@@ -145,7 +147,7 @@
       @include app.text('sm');
       font-family: 'Lato', sans-serif;
       padding: 0.5rem 1rem;
-      border: 1px solid app.colors('grey-200');
+      border: 1px solid $border-color;
 
       border-top-width: 0;
       border-right-width: 0;
@@ -157,6 +159,28 @@
       &:last-child {
         border-right-width: 1px;
       }
+    }
+  }
+
+  .skeleton {
+    height: 1.25rem;
+    @include app.text('sm');
+    font-family: 'Lato', sans-serif;
+    background: #eee;
+    background: linear-gradient(
+      110deg,
+      #ececec71 8%,
+      #e2e2e2a8 18%,
+      #ececec8f 35%
+    );
+    border-radius: 0.25rem;
+    background-size: 200% 100%;
+    animation: 2s shine linear infinite;
+  }
+
+  @keyframes shine {
+    to {
+      background-position-x: -200%;
     }
   }
 </style>
