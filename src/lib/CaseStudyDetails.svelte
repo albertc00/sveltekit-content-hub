@@ -221,23 +221,25 @@
     border: 1px solid app.colors('grey-400', 0.3);
     border-radius: 0.25rem;
 
-    th,
-    td {
-      @include text;
-      border-bottom: 1px solid app.colors('grey-400', 0.3);
-      padding: 0.5rem;
-    }
-
-    tr:last-child {
+    tr {
       th,
       td {
-        border-bottom: 0 none;
+        @include text;
+        border-bottom: 1px solid app.colors('grey-400', 0.3);
+        padding: 0.5rem;
       }
-    }
 
-    th {
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 500;
+      th {
+        font-family: 'Work Sans', sans-serif;
+        font-weight: 500;
+      }
+
+      &:last-child {
+        th,
+        td {
+          border-bottom: 0 none;
+        }
+      }
     }
   }
 
