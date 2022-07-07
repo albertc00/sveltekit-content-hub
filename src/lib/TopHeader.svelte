@@ -1,8 +1,9 @@
 <script>
 </script>
-<div  class="navbar-selection">
+
+<div class="navbar-selection">
   <div class="nav-wrapper">
-    <a href="/" class="homebutton" >
+    <a href="/" class="homebutton">
       <svg
         version="1.1"
         id="Layer_1"
@@ -227,9 +228,7 @@
     </a>
   </div>
 </div>
-  
 
-   
 <style lang="scss">
   @use '../styles/app';
 
@@ -259,5 +258,3 @@
     }
   }
 </style>
-
-  

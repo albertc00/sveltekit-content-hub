@@ -81,9 +81,9 @@
     align-items: center;
     margin: 0;
     padding: 0.375rem 0.5rem 0.375rem 0.875rem;
-    border: 1px solid #b1b1b1;
-    border-radius: 0.25rem;
-    color: #5f7380;
+    border: 1px solid app.colors('grey-200');
+    border-radius: 0.375rem;
+    color: app.colors('grey-400');
     @include app.text('sm');
     font-family: 'Lato', sans-serif;
   }
@@ -91,7 +91,7 @@
   .actions {
     position: absolute;
     right: 0;
-    border: 1px solid #b1b1b1;
+    border: 1px solid app.colors('grey-200');
     border-radius: 0.25rem;
     list-style: none;
     padding: 0.5rem 0;
@@ -118,9 +118,10 @@
     color: #5f7380;
     border: 0 none;
     background-color: transparent;
+    transition: background-color 0.15s ease-out;
   }
 
   .action-button:hover {
-    background-color: #f2f2f2;
+    background-color: app.colors('grey-400', 0.05);
   }
 </style>
