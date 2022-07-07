@@ -39,15 +39,19 @@
         <th scope="row" class="label">Company</th>
         <td>
           <Value value={data.clientName}>
-            <Hyperlink text={data.clientName} link={data.clientWebsite} />
+            <Hyperlink
+              text={data.clientName}
+              link={data.clientWebsite}
+              favicon
+            />
           </Value>
         </td>
       </tr>
       <tr>
         <th scope="row" class="label">Industry</th>
         <td>
-          <Value value={data.product}>
-            <div class="p">{data.product}</div>
+          <Value value={data.clientIndustry}>
+            <div class="p">{data.clientIndustry}</div>
           </Value>
         </td>
       </tr>

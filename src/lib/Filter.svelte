@@ -20,9 +20,23 @@
   let value = [];
 
   const compares = [
-    { text: 'contains exactly', compare: 'LIKE' },
-    { text: "doesn't contain exactly", compare: 'NOT LIKE' },
+    { text: 'contains exactly', compare: 'LIKE', withValue: true },
+    { text: "doesn't contain exactly", compare: 'NOT LIKE', withValue: true },
+    { text: 'is known', compare: 'KNOWN', withValue: false },
+    { text: 'is unknown', compare: 'UNKNOWN', withValue: false },
   ];
+
+  const withValue = compares
+    .filter(({ withValue }) => withValue)
+    .map(({ compare }) => compare);
+
+  $: if (
+    selectedCompare &&
+    !withValue.includes(selectedCompare) &&
+    value.length
+  ) {
+    value = [];
+  }
 
   function handleSet() {
     step = 1;
@@ -86,7 +100,11 @@
   }
 
   function handleSubmit() {
-    onApply(filters);
+    onApply(
+      filters.map(({ value, ...rest }) =>
+        value.length ? { value, ...rest } : rest
+      )
+    );
   }
 
   function joinOr(arr) {
@@ -154,7 +172,7 @@
       </button>
       <h6>{selectedPropText}</h6>
       <div class="compares">
-        {#each compares as { text, compare } (compare)}
+        {#each compares as { text, compare, withValue } (compare)}
           <div class="compare">
             <label class="compare-label">
               <input
@@ -166,7 +184,7 @@
               />
               <span class="compare-text">{text}</span>
             </label>
-            {#if selectedCompare === compare}
+            {#if withValue && selectedCompare === compare}
               <div>
                 <MultiTermInput bind:keywords={value} />
               </div>
@@ -175,7 +193,8 @@
         {/each}
       </div>
       <Button
-        disabled={!value.length}
+        disabled={!selectedCompare ||
+          (withValue.includes(selectedCompare) && !value.length)}
         color="blue-400"
         on:click={() =>
           handleAdd({ key: selectedPropID, compare: selectedCompare, value })}
@@ -186,13 +205,17 @@
         {#each _filters as { key, text, compareText, value }, i (key)}
           <div class="filter" on:click|preventDefault={() => handleEdit(key)}>
             <Tooltip
-              title={`${text} ${compareText} "${joinOr(value)}"`}
+              title={`${text} ${compareText}${
+                value?.length ? ` "${joinOr(value)}"` : ''
+              }`}
               disabled={disabled[i]}
             >
               <p bind:this={filterRefs[i]} class="filter-desc">
                 <span class="filter-prop">{text}</span>
                 {compareText}
-                <strong class="filter-keyword">{joinOr(value)}</strong>
+                {#if value?.length}
+                  <strong class="filter-keyword">{joinOr(value)}</strong>
+                {/if}
               </p>
             </Tooltip>
             <button
@@ -220,6 +243,8 @@
           preventDefault
           on:click={handleCancel}>Cancel</Button
         >
+        <!-- <button class="primary" type="submit">Apply filter</button>
+        <button on:click|preventDefault={handleCancel}>Cancel</button> -->
       </div>
     {/if}
   </div>
@@ -272,6 +297,10 @@
     max-height: calc((42px * 5) + (0.75rem * 6));
     overflow-y: scroll;
     padding: 0.5rem 0.5rem 0.5rem 0;
+    // padding: 0.5rem;
+    // box-shadow: inset 0px 0px 0.5rem app.colors('grey-400', 0.5);
+    // border: 1px solid app.colors('grey-400', 0.25);
+    border-radius: 0.125rem;
   }
 
   ul {
@@ -349,6 +378,7 @@
     width: 28px;
     border: 0 none;
     background-color: transparent;
+    color: app.colors('grey-400');
     cursor: pointer;
   }
 

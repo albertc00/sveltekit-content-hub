@@ -1,6 +1,8 @@
 <script>
   import TableCell from '$shared/TableCell.svelte';
+  // @ts-ignore
   import { goto } from '$app/navigation';
+  // @ts-ignore
   import { navigating } from '$app/stores';
   import Table from '$lib/Table.svelte';
   import Pagination from '$shared/Pagination.svelte';
@@ -14,10 +16,9 @@
   import DropdownActions from './DropdownActions.svelte';
 
   import Webpage from '$lib/Webpage.svelte';
-  import PDF from '$lib/PDF.svelte';
   import Title from '$lib/Title.svelte';
   import Hyperlink from '$shared/Hyperlink.svelte';
-  import TableFunc from '$shared/TableFunc.svelte';
+  import ResultsCell from '$lib/ResultsCell.svelte';
 
   export let data;
 
@@ -29,7 +30,6 @@
   $: filters = data.filters ?? [];
 
   function handleSearch({ detail }) {
-    console.log(detail);
     const route = buildRoute({
       page: 1,
       perPage,
@@ -130,8 +130,6 @@
 
     return `${route}?${httpBuildQuery(queryParams)}`;
   }
-
-  let wrapperRef;
 </script>
 
 <div class="container">
@@ -177,12 +175,12 @@
   {#if $navigating}
     <Table data={null} columns={$columns} initialRowCount={perPage} />
   {:else}
-    <Table columns={$columns} data={caseStudies} bind:wrapperRef>
-      <svelte:fragment slot="cell" let:row let:col>
+    <Table columns={$columns} data={caseStudies}>
+      <svelte:fragment slot="cell" let:row let:col let:wrapperRef>
         {#if col === 'title'}
           <Title data={row} {wrapperRef} />
-        {:else if col === 'industry'}
-          <TableCell text={row.product} {wrapperRef} />
+        {:else if col === 'clientIndustry'}
+          <TableCell text={row.clientIndustry} {wrapperRef} />
         {:else if col === 'targetLocation'}
           <TableCell text={row.targetLocation} {wrapperRef} />
         {:else if col === 'pdf'}
@@ -196,18 +194,18 @@
             favicon
             {wrapperRef}
           />
-        {:else if col === 'target_dm'}
+        {:else if col === 'targetDM'}
           <TableCell text={row.targetDM} {wrapperRef} />
         {:else if col === 'targetIndustry'}
           <TableCell text={row.targetIndustry} {wrapperRef} />
-        {:else if col === 'location'}
+        {:else if col === 'clientLocation'}
           <TableCell text={row.clientLocation} {wrapperRef} />
         {:else if col === 'hq'}
           <TableCell text={row.clientHQ} {wrapperRef} />
         {:else if col === 'campaign'}
           <TableCell text={row.campaign} {wrapperRef} />
         {:else if col === 'results'}
-          <TableFunc data={row} text={row.results} />
+          <ResultsCell results={row.results} title={row.title} {wrapperRef} />
         {:else if col === 'lob'}
           <TableCell text={row.clientLOB} {wrapperRef} />
         {/if}

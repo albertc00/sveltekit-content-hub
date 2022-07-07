@@ -178,23 +178,32 @@
             style={`background: ${show.label};`}
             in:receive|local={{ key: show.id }}
             out:send|local={{ key: show.id }}
-            draggable={true}
+            draggable={shown.length === 1 ? false : true}
             on:dragstart={(e) => handleDragStart(show, getIndex(show.id), e)}
             on:drag={handleDrag}
             on:dragover={(e) => handleDragOver(getIndex(show.id))}
             on:dragend={handleDragEnd}
+            class:disabled={shown.length === 1}
           >
             <div class="label">
               <!-- 							<svg class="x" xmlns="http://www.w3.org/2000/svg" height="20" width="20"><path d="M3.333 9V7.25H16.667V9ZM3.333 12.5V10.75H16.667V12.5Z"/></svg> -->
-              <span class="material-symbols-outlined"> &#xe945; </span>
+              <span
+                class="drag material-symbols-outlined"
+                class:disabled={shown.length === 1}
+              >
+                &#xe945;
+              </span>
               <span>{show.label}</span>
             </div>
-            <button
-              class="hide-button"
-              on:click|preventDefault={() => toggleShowHide(show, false)}
-            >
-              <span class="material-symbols-outlined"> &#xe5cd; </span>
-            </button>
+
+            {#if shown.length > 1}
+              <button
+                class="hide-button"
+                on:click|preventDefault={() => toggleShowHide(show, false)}
+              >
+                <span class="material-symbols-outlined"> &#xe5cd; </span>
+              </button>
+            {/if}
           </li>
         {/each}
       </ul>
@@ -207,6 +216,8 @@
 </form>
 
 <style lang="scss">
+  @use '../styles/app';
+
   .show-hide-cols {
     display: grid;
     grid-template-columns: 300px 300px;
@@ -239,6 +250,8 @@
   }
 
   li {
+    @include app.text('base');
+    font-family: 'Lato', sans-serif;
     border: 1px solid #b1b1b1;
     border-radius: 0.25rem;
     padding: 0.5rem 0.75rem;
@@ -252,12 +265,22 @@
 
   .show-cols li {
     cursor: grab;
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 
   .label {
     display: flex;
     gap: 0.25rem;
     align-items: center;
+  }
+
+  .drag {
+    &.disabled {
+      color: app.colors('grey-400', 0.25);
+    }
   }
 
   .hidden {
@@ -286,13 +309,9 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
     color: #5f7380;
-  }
-
-  .x {
-    fill: #5f7380;
   }
 
   .ghost {
