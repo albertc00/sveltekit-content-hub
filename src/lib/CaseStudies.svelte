@@ -125,7 +125,7 @@
       queryParams.s = s;
     }
 
-    if (filters.length) {
+    if (filters?.length) {
       queryParams.filters = filters;
     }
 

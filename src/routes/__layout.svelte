@@ -16,7 +16,7 @@
   />
 </svelte:head>
 
+<TopHeader />
 <main class="main">
-  <TopHeader />
   <slot />
 </main>

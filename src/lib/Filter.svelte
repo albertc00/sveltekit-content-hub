@@ -9,6 +9,10 @@
   export let onClose;
   export let onApply;
 
+  filters = filters.map(({ value, ...rest }) =>
+    value ? { value, ...rest } : { value: [], ...rest }
+  );
+
   let step = filters.length ? 2 : 0;
   let history = [];
 
@@ -102,7 +106,7 @@
   function handleSubmit() {
     onApply(
       filters.map(({ value, ...rest }) =>
-        value.length ? { value, ...rest } : rest
+        value?.length ? { value, ...rest } : rest
       )
     );
   }
