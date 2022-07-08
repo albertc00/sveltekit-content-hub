@@ -1,13 +1,13 @@
 <script>
   import Tooltip from '$shared/Tooltip.svelte';
   import hasEllipses from '$functions/hasEllipses.js';
-  import Image from '$shared/Image.svelte';
 
   export let link;
   export let text = 'I am a hyperlink';
-  export let favicon = false;
   export let copyButton = false;
   export let wrapperRef = null;
+
+  const before = $$slots.before;
 
   let textRef;
   $: disabled = textRef && textWidth && !hasEllipses(textRef);
@@ -19,7 +19,7 @@
     let min1 = `${textWidth}px + 0.25rem`;
     let min2 = '100%';
 
-    if (favicon) {
+    if (before) {
       min1 = `16px + 0.75rem + ${min1}`;
     }
 
@@ -44,25 +44,10 @@
 </script>
 
 {#if link}
-  <div
-    class="hyperlink"
-    class:copyButton
-    style={`--text-width: ${textWidth}px;`}
-  >
+  <div class="hyperlink" class:before style={`--text-width: ${textWidth}px;`}>
     <Tooltip title={text} {disabled} boundaryRef={wrapperRef}>
       <a href={link} class="link" target="_blank" bind:this={linkRef}>
-        {#if favicon}
-          <Image let:fallback>
-            <img
-              src={`https://s2.googleusercontent.com/s2/favicons?domain=${link}`}
-              alt="Company logo"
-              width="16"
-              height="16"
-              loading="lazy"
-              use:fallback
-            />
-          </Image>
-        {/if}
+        <slot name="before" />
         <span class="text" bind:this={textRef} bind:offsetWidth={textWidth}>
           {text}
         </span>
@@ -136,5 +121,12 @@
     top: 50%;
     left: calc(var(--text-width) + 0.75rem);
     transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+  }
+
+  .before {
+    .abs {
+      left: calc(16px + 0.75rem + var(--text-width) + 0.75rem);
+    }
   }
 </style>

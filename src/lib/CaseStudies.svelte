@@ -19,6 +19,7 @@
   import Title from '$lib/Title.svelte';
   import Hyperlink from '$shared/Hyperlink.svelte';
   import ResultsCell from '$lib/ResultsCell.svelte';
+  import Image from '$shared/Image.svelte';
 
   export let data;
 
@@ -184,16 +185,28 @@
         {:else if col === 'targetLocation'}
           <TableCell text={row.targetLocation} {wrapperRef} />
         {:else if col === 'pdf'}
-          <Hyperlink text="View PDF" link={row.pdf} copyButton {wrapperRef} />
+          <Hyperlink text="View PDF" link={row.pdf} copyButton {wrapperRef}>
+            <span slot="before" class="pdf material-symbols-outlined"
+              >&#xe415;</span
+            ></Hyperlink
+          >
         {:else if col === 'webpage'}
           <Webpage gated={row.link} unlocked={row.unlocked} />
         {:else if col === 'client'}
-          <Hyperlink
-            text={row.clientName}
-            link={row.clientWebsite}
-            favicon
-            {wrapperRef}
-          />
+          <Hyperlink text={row.clientName} link={row.clientWebsite} {wrapperRef}
+            ><svelte:fragment slot="before">
+              <Image let:fallback>
+                <img
+                  src={`https://s2.googleusercontent.com/s2/favicons?domain=${row.clientWebsite}`}
+                  alt="Company logo"
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                  use:fallback
+                />
+              </Image>
+            </svelte:fragment></Hyperlink
+          >
         {:else if col === 'targetDM'}
           <TableCell text={row.targetDM} {wrapperRef} />
         {:else if col === 'targetIndustry'}
@@ -369,5 +382,11 @@
     font-weight: 500;
     color: app.colors('blue-350');
     cursor: pointer;
+  }
+
+  .pdf.material-symbols-outlined {
+    font-size: 1rem;
+    line-height: 1;
+    color: app.colors('red-400');
   }
 </style>

@@ -1,6 +1,7 @@
 <script>
   import Value from '$shared/Value.svelte';
   import Hyperlink from '$shared/Hyperlink.svelte';
+  import Image from '$shared/Image.svelte';
 
   export let data;
 </script>
@@ -11,8 +12,12 @@
       <tr>
         <th scope="row" class="label">Title</th>
         <td>
-          <div class="p">
+          <div class="p title">
             <a href={data.unlocked} target="_blank">{data.title}</a>
+            <span>|</span>
+            <a href={data.pdf} target="_blank" class="material-symbols-outlined"
+              >&#xe415;</a
+            >
           </div>
         </td>
       </tr>
@@ -39,11 +44,20 @@
         <th scope="row" class="label">Company</th>
         <td>
           <Value value={data.clientName}>
-            <Hyperlink
-              text={data.clientName}
-              link={data.clientWebsite}
-              favicon
-            />
+            <Hyperlink text={data.clientName} link={data.clientWebsite}>
+              <svelte:fragment slot="before">
+                <Image let:fallback>
+                  <img
+                    src={`https://s2.googleusercontent.com/s2/favicons?domain=${data.clientWebsite}`}
+                    alt="Company logo"
+                    width="16"
+                    height="16"
+                    loading="lazy"
+                    use:fallback
+                  />
+                </Image>
+              </svelte:fragment>
+            </Hyperlink>
           </Value>
         </td>
       </tr>
@@ -125,6 +139,18 @@
                 <li class="pill">{type}</li>
               {/each}
             </ul>
+          </Value>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="label">Duration</th>
+        <td>
+          <Value value={data.duration}>
+            <div class="p">
+              {`${data.duration} ${
+                parseInt(data.duration) > 1 ? 'months' : 'month'
+              }`}
+            </div>
           </Value>
         </td>
       </tr>
@@ -295,6 +321,19 @@
     letter-spacing: 0.025em;
     color: app.colors('grey-900', 0.85);
     margin: 1rem 0;
+  }
+  .title {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    span {
+      color: app.colors('grey-400');
+    }
+
+    .material-symbols-outlined {
+      color: app.colors('red-400');
+    }
   }
 
   .p {

@@ -16,7 +16,7 @@
       keywords: ['event', 'webinar', 'invite'],
     },
     {
-      icon: '&#xe80d;',
+      icon: '&#xe7fe;',
       keywords: ['social', 'connection', 'smm'],
     },
     {
@@ -30,6 +30,14 @@
     {
       icon: '&#xf0d2;',
       keywords: ['email'],
+    },
+    {
+      icon: '&#xe88e;',
+      keywords: ['info'],
+    },
+    {
+      icon: '&#xe7c8;',
+      keywords: ['interest'],
     },
   ];
 

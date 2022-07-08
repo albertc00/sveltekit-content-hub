@@ -1,22 +1,18 @@
 <script>
-  import { onMount } from 'svelte';
   import range from '$functions/range';
 
   export let data = null;
   export let columns;
-  // export let wrapperRef = null;
   export let initialRowCount = 10;
 
   $: _columns = columns.filter(({ show }) => show);
 
-  let mql;
-  onMount(() => {
-    mql = window.matchMedia('(min-width: 1281px)');
-  });
-
+  let windowWidth;
+  let wrapperRef;
   let excessWidth;
-  $: if (!excessWidth && mql && wrapperRef) {
-    const maxCols = mql?.matches ? 7 : 5;
+
+  $: if (windowWidth && wrapperRef) {
+    const maxCols = window.matchMedia('(min-width: 1281px)').matches ? 7 : 5;
     const colWidth = wrapperRef?.clientWidth / maxCols;
     const colCount = _columns.length;
     const excessCols = Math.max(colCount - maxCols, 0);
@@ -27,11 +23,6 @@
   let headerRef;
   let rowRef = [];
   let maxHeight;
-
-  // $: headerHeight = headerRef?.offsetHeight;
-  // $: rowHeight = rowRef[0]?.offsetHeight;
-  // $: scrollXHeight = wrapperRef?.offsetHeight - wrapperRef?.clientHeight;
-  // $: maxHeight = headerHeight + rowHeight * maxRows + scrollXHeight;
 
   $: if (headerRef && rowRef[0] && wrapperRef) {
     const headerHeight = headerRef.offsetHeight;
@@ -44,9 +35,9 @@
   $: if (!data) {
     dummyRows = range(1, initialRowCount);
   }
-
-  let wrapperRef;
 </script>
+
+<svelte:window bind:innerWidth={windowWidth} />
 
 <div
   class="table-wrapper"
